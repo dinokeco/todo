@@ -2,4 +2,6 @@
 
 echo "Welcome to dyamic web from past century";
 
+echo "Dino";
+
 ?>
