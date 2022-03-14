@@ -30,15 +30,16 @@ class TodoDao{
   * Method used to add todo to the database
   */
   public function add($description, $created){
-    $stmt = $this->conn->prepare("INSERT INTO todos (description, created) VALUES ('$description', '$created')");
-    $stmt->execute();
+    $stmt = $this->conn->prepare("INSERT INTO todos (description, created) VALUES (:description, :created)");
+    $stmt->execute(['description' => $description, 'created' => $created]);
   }
 
   /**
   * Delete todo record from the database
   */
   public function delete($id){
-    $stmt = $this->conn->prepare("DELETE FROM todos WHERE id=$id");
+    $stmt = $this->conn->prepare("DELETE FROM todos WHERE id=:id");
+    $stmt->bindParam(':id', $id); // SQL injection prevention
     $stmt->execute();
   }
 
@@ -46,8 +47,8 @@ class TodoDao{
   * Update todo record
   */
   public function update($id, $description, $created){
-    $stmt = $this->conn->prepare("UPDATE todos SET description='$description', created='$created' WHERE id=$id");
-    $stmt->execute();
+    $stmt = $this->conn->prepare("UPDATE todos SET description=:description, created=:created WHERE id=:id");
+    $stmt->execute(['id' => $id, 'description' => $description, 'created' => $created]);
   }
 
 }
