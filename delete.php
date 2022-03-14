@@ -3,11 +3,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-echo "Welcome to dyamic web from past century";
-
 require_once("rest/dao/TodoDao.class.php");
 
+$id = $_REQUEST['id'];
+
 $dao = new TodoDao();
-$results = $dao->get_all();
-print_r($results);
+$dao->delete($id);
+
+echo "DELETED $id";
 ?>
