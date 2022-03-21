@@ -14,17 +14,14 @@ Flight::register('todoDao', 'TodoDao');
 * List all todos
 */
 Flight::route('GET /todos', function(){
-
-  $todos = Flight::todoDao()->get_all();
-  Flight::json($todos);
+  Flight::json(Flight::todoDao()->get_all());
 });
 
 /**
 * List invidiual todo
 */
 Flight::route('GET /todos/@id', function($id){
-  $todo = Flight::todoDao()->get_by_id($id);
-  Flight::json($todo);
+  Flight::json(Flight::todoDao()->get_by_id($id));
 });
 
 
@@ -32,9 +29,7 @@ Flight::route('GET /todos/@id', function($id){
 * add todo
 */
 Flight::route('POST /todos', function(){
-  $request = Flight::request();
-  $data = $request->data->getData();
-  Flight::todoDao()->add($data['description'], $data['created']);
+  Flight::json(Flight::todoDao()->add(Flight::request()->data->getData()));
 });
 
 /**

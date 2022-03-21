@@ -32,13 +32,15 @@ class TodoDao{
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return reset($result);
   }
-  
+
   /**
   * Method used to add todo to the database
   */
-  public function add($description, $created){
+  public function add($todo){
     $stmt = $this->conn->prepare("INSERT INTO todos (description, created) VALUES (:description, :created)");
-    $stmt->execute(['description' => $description, 'created' => $created]);
+    $stmt->execute($todo);
+    $todo['id'] = $this->conn->lastInsertId();
+    return $todo;
   }
 
   /**
