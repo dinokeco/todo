@@ -11,7 +11,7 @@ require_once '../vendor/autoload.php';
 /**
 * List all todos
 */
-Flight::route('/todos', function(){
+Flight::route('GET /todos', function(){
   $dao = new TodoDao();
   $todos = $dao->get_all();
   Flight::json($todos);
@@ -20,6 +20,12 @@ Flight::route('/todos', function(){
 /**
 * List invidiual todo
 */
+Flight::route('GET /todos/@id', function($id){
+  $dao = new TodoDao();
+  $todo = $dao->get_by_id($id);
+  Flight::json($todo);
+});
+
 
 /**
 * add todo

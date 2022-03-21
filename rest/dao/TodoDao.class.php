@@ -26,6 +26,13 @@ class TodoDao{
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function get_by_id($id){
+    $stmt = $this->conn->prepare("SELECT * FROM todos WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return reset($result);
+  }
+  
   /**
   * Method used to add todo to the database
   */
