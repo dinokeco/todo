@@ -24,7 +24,6 @@ Flight::route('GET /todos/@id', function($id){
   Flight::json(Flight::todoDao()->get_by_id($id));
 });
 
-
 /**
 * add todo
 */
@@ -35,6 +34,11 @@ Flight::route('POST /todos', function(){
 /**
 * update todo
 */
+Flight::route('PUT /todos/@id', function($id){
+  $data = Flight::request()->data->getData();
+  $data['id'] = $id;
+  Flight::json(Flight::todoDao()->update($data));
+});
 
 /**
 * delete todo
