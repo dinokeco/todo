@@ -6,14 +6,16 @@ error_reporting(E_ALL);
 require_once 'dao/TodoDao.class.php';
 require_once '../vendor/autoload.php';
 
+Flight::register('todoDao', 'TodoDao');
+
 // CRUD operations for todos entity
 
 /**
 * List all todos
 */
 Flight::route('GET /todos', function(){
-  $dao = new TodoDao();
-  $todos = $dao->get_all();
+
+  $todos = Flight::todoDao()->get_all();
   Flight::json($todos);
 });
 
@@ -21,8 +23,7 @@ Flight::route('GET /todos', function(){
 * List invidiual todo
 */
 Flight::route('GET /todos/@id', function($id){
-  $dao = new TodoDao();
-  $todo = $dao->get_by_id($id);
+  $todo = Flight::todoDao()->get_by_id($id);
   Flight::json($todo);
 });
 
@@ -30,6 +31,11 @@ Flight::route('GET /todos/@id', function($id){
 /**
 * add todo
 */
+Flight::route('POST /todos', function(){
+  $request = Flight::request();
+  $data = $request->data->getData();
+  Flight::todoDao()->add($data['description'], $data['created']);
+});
 
 /**
 * update todo
@@ -38,15 +44,9 @@ Flight::route('GET /todos/@id', function($id){
 /**
 * delete todo
 */
-
-
-
-Flight::route('/dorian', function(){
-    echo 'hello world DORIAN!';
-});
-
-Flight::route('/tin/@name', function($name){
-    echo 'hello world TIN!'. $name;
+Flight::route('DELETE /todos/@id', function($id){
+  Flight::todoDao()->delete($id);
+  Flight::json(["message" => "deleted"]);
 });
 
 Flight::start();
