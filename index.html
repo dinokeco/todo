@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>ToDo App</title>
+  </head>
+  <body>
+    <table class="todos" id="todos-table" border="1">
+      <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Country</th>
+      </tr>
+      <tr>
+        <td>Alfreds Futterkiste</td>
+        <td>Maria Anders</td>
+        <td>Germany</td>
+      </tr>
+      <tr>
+        <td>Centro comercial Moctezuma</td>
+        <td>Francisco Chang</td>
+        <td>Mexico</td>
+      </tr>
+    </table>
+  </body>
+  <script src="js/jquery-3.6.0.min.js"></script>
+
+  <script>
+  // ajax get request from API
+  $.get( "rest/todos", function( data ) {
+    console.log(data);
+    alert( "Load was performed." );
+  });
+  </script>
+</html>
