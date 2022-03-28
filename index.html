@@ -1,35 +1,89 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>ToDo App</title>
-  </head>
-  <body>
-    <table class="todos" id="todos-table" border="1">
-      <tr>
-        <th>Company</th>
-        <th>Contact</th>
-        <th>Country</th>
-      </tr>
-      <tr>
-        <td>Alfreds Futterkiste</td>
-        <td>Maria Anders</td>
-        <td>Germany</td>
-      </tr>
-      <tr>
-        <td>Centro comercial Moctezuma</td>
-        <td>Francisco Chang</td>
-        <td>Mexico</td>
-      </tr>
-    </table>
-  </body>
-  <script src="js/jquery-3.6.0.min.js"></script>
 
-  <script>
+<head>
+  <meta charset="utf-8">
+  <title>ToDo App</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Carousel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container marketing" style="margin-top:100px;">
+      <!-- Three columns of text below the carousel -->
+      <div id="todo-list" class="row">
+        <div class="col-lg-4">
+          <h2>Heading</h2>
+          <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
+          <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+
+        <div class="col-lg-4">
+          <h2>Heading</h2>
+          <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
+          <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+
+        <div class="col-lg-4">
+          <h2></h2>
+          <p></p>
+          <p><a class="btn btn-secondary" href="#">View details</a></p>
+        </div>
+
+      </div><!-- /.row -->
+    </div>
+
+  </main>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+
+<script>
   // ajax get request from API
-  $.get( "rest/todos", function( data ) {
+  $.get("rest/todos", function(data) {
+
+    $("#todo-list").html("");
+
+    var html = "";
+    for(let i = 0; i < data.length; i++){
+      html += `
+      <div class="col-lg-4">
+        <h2>`+ data[i].created +`</h2>
+        <p>`+ data[i].description +`</p>
+        <p><a class="btn btn-secondary" href="#">View details</a></p>
+      </div> `;
+    }
+    $("#todo-list").html(html);
     console.log(data);
-    alert( "Load was performed." );
+    //alert("Load was performed.");
   });
-  </script>
+</script>
+
 </html>
