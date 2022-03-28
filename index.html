@@ -107,7 +107,8 @@
           $("#exampleModal").modal("hide");
           $('.save-todo-button').attr('disabled', false);
           $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-          getTodos();
+          getTodos(); // perf optimization
+          console.log(result);
       }
     });
 
