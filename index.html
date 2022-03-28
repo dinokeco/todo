@@ -53,34 +53,65 @@
 
 <script>
   // ajax get request from API
-  $.get("rest/todos", function(data) {
+  getTodos();
 
-    $("#todo-list").html("");
+  function getTodos(){
+    $.get("rest/todos", function(data) {
 
-    var html = "";
-    for(let i = 0; i < data.length; i++){
-      html += `
-      <div class="col-lg-4">
-        <h2>`+ data[i].created +`</h2>
-        <p>`+ data[i].description +`</p>
-        <p>
-          <button type="button" class="btn btn-primary" onclick="showModal(`+data[i].id+`)" >
-            Launch demo modal
-          </button>
-        </p>
-      </div> `;
-    }
-    $("#todo-list").html(html);
-    console.log(data);
-  });
+      $("#todo-list").html("");
+
+      var html = "";
+      for(let i = 0; i < data.length; i++){
+        html += `
+        <div class="col-lg-4">
+          <h2>`+ data[i].created +`</h2>
+          <p>`+ data[i].description +`</p>
+          <p>
+            <button type="button" class="btn btn-primary todo-button" onclick="showModal(`+data[i].id+`)" >
+              Launch demo modal
+            </button>
+          </p>
+        </div>`;
+      }
+      $("#todo-list").html(html);
+      console.log(data);
+    });
+  }
 
   function showModal(id){
+    $('.todo-button').attr('disabled', true);
     $.get('rest/todos/'+id, function(data){
       console.log(data);
-      //$("#exampleModal .modal-body").html(id);
       $("#description").val(data.description);
+      $("#id").val(data.id);
+      $("#created").val(data.created);
       $("#exampleModal").modal("show");
+      $('.todo-button').attr('disabled', false);
     })
+  }
+
+  function saveTodo(){
+    $('.save-todo-button').attr('disabled', true);
+    var todo = {};
+
+    todo.description = $('#description').val();
+    todo.created = $('#created').val();
+
+    $.ajax({
+      url: 'rest/todos/'+$('#id').val(),
+      type: 'PUT',
+      data: JSON.stringify(todo),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+          $("#exampleModal").modal("hide");
+          $('.save-todo-button').attr('disabled', false);
+          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
+          getTodos();
+      }
+    });
+
+    console.log(todo);
   }
 </script>
 
@@ -93,11 +124,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <input id="id" type="hidden" />
         <input id="description" type="text" />
+        <input id="created" type="hidden" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary save-todo-button" onclick="saveTodo()">Save changes</button>
       </div>
     </div>
   </div>
