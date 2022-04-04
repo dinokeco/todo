@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <title>ToDo App</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .error{
+      color:red;
+    }
+  </style>
 </head>
 
 <body>
@@ -56,14 +61,84 @@
 </body>
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input id="id" type="hidden" />
+        <input id="description" type="text" />
+        <input id="created" type="hidden" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save-todo-button" onclick="saveTodo()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addToDoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="addToDoForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add ToDo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+              <label>Description</label>
+              <input name="description" type="text" class="form-control required" placeholder="Enter todo">
+            </div>
+            <div class="form-group">
+              <label>Created</label>
+              <input name="created" type="date" class="form-control required" placeholder="Created date">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <script>
-  // ajax get request from API
+  $('#addToDoForm').validate({
+    submitHandler: function(form) {
+      var todo = Object.fromEntries((new FormData(form)).entries());
+      $.ajax({
+        url: 'rest/todos',
+        type: 'POST',
+        data: JSON.stringify(todo),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(result) {
+            $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
+            getTodos(); // perf optimization
+            console.log(result);
+            $("#addToDoModal").modal("hide");
+        }
+      });
+    }
+  });
+
   getTodos();
 
   function getTodos(){
     $.get("rest/todos", function(data) {
-
       $("#todo-list").html("");
 
       var html = "";
@@ -73,9 +148,10 @@
           <h2>`+ data[i].created +`</h2>
           <p>`+ data[i].description +`</p>
           <p>
-            <button type="button" class="btn btn-primary todo-button" onclick="showModal(`+data[i].id+`)" >
-              Launch demo modal
-            </button>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-primary todo-button" onclick="showModal(`+data[i].id+`)">Edit</button>
+              <button type="button" class="btn btn-danger todo-button" onclick="deleteTodo(`+data[i].id+`)">Delete</button>
+            </div>
           </p>
         </div>`;
       }
@@ -121,6 +197,18 @@
     console.log(todo);
   }
 
+  function deleteTodo(id){
+    $('.todo-button').attr('disabled', true);
+    $.ajax({
+      url: 'rest/todos/'+id,
+      type: 'DELETE',
+      success: function(result) {
+          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
+          getTodos();
+      }
+    });
+  }
+/*
   function addTodo(){
     var todo = {};
     todo.description = $('#add_description').val();
@@ -139,48 +227,8 @@
           $("#addToDoModal").modal("hide");
       }
     });
-  }
+
+  }*/
 </script>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <input id="id" type="hidden" />
-        <input id="description" type="text" />
-        <input id="created" type="hidden" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-todo-button" onclick="saveTodo()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Add Modal -->
-<div class="modal fade" id="addToDoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add ToDo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <input id="add_description" type="text" />
-        <input id="add_created" type="date" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-todo-button" onclick="addTodo()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 </html>
