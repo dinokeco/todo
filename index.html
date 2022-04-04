@@ -39,6 +39,12 @@
   <main>
     <div class="container marketing" style="margin-top:100px;">
       <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div>
+          <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addToDoModal">Add Todo</button>
+        </div>
+      </div>
+
       <div id="todo-list" class="row">
         <div class="spinner-border" role="status">
           <span class="sr-only"></span>
@@ -114,6 +120,26 @@
 
     console.log(todo);
   }
+
+  function addTodo(){
+    var todo = {};
+    todo.description = $('#add_description').val();
+    todo.created = $('#add_created').val();
+
+    $.ajax({
+      url: 'rest/todos',
+      type: 'POST',
+      data: JSON.stringify(todo),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
+          getTodos(); // perf optimization
+          console.log(result);
+          $("#addToDoModal").modal("hide");
+      }
+    });
+  }
 </script>
 
 <!-- Modal -->
@@ -132,6 +158,26 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary save-todo-button" onclick="saveTodo()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addToDoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add ToDo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input id="add_description" type="text" />
+        <input id="add_created" type="date" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save-todo-button" onclick="addTodo()">Save changes</button>
       </div>
     </div>
   </div>
