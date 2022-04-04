@@ -62,7 +62,7 @@
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/jquery.validate.min.js"></script>
-
+<script src="js/todo-service.js"></script>
 
 
 <!-- Modal -->
@@ -80,7 +80,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-todo-button" onclick="saveTodo()">Save changes</button>
+        <button type="button" class="btn btn-primary save-todo-button" onclick="ToDoService.update()">Save changes</button>
       </div>
     </div>
   </div>
@@ -114,121 +114,8 @@
   </div>
 </div>
 
-
 <script>
-  $('#addToDoForm').validate({
-    submitHandler: function(form) {
-      var todo = Object.fromEntries((new FormData(form)).entries());
-      $.ajax({
-        url: 'rest/todos',
-        type: 'POST',
-        data: JSON.stringify(todo),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            getTodos(); // perf optimization
-            console.log(result);
-            $("#addToDoModal").modal("hide");
-        }
-      });
-    }
-  });
-
-  getTodos();
-
-  function getTodos(){
-    $.get("rest/todos", function(data) {
-      $("#todo-list").html("");
-
-      var html = "";
-      for(let i = 0; i < data.length; i++){
-        html += `
-        <div class="col-lg-4">
-          <h2>`+ data[i].created +`</h2>
-          <p>`+ data[i].description +`</p>
-          <p>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-primary todo-button" onclick="showModal(`+data[i].id+`)">Edit</button>
-              <button type="button" class="btn btn-danger todo-button" onclick="deleteTodo(`+data[i].id+`)">Delete</button>
-            </div>
-          </p>
-        </div>`;
-      }
-      $("#todo-list").html(html);
-      console.log(data);
-    });
-  }
-
-  function showModal(id){
-    $('.todo-button').attr('disabled', true);
-    $.get('rest/todos/'+id, function(data){
-      console.log(data);
-      $("#description").val(data.description);
-      $("#id").val(data.id);
-      $("#created").val(data.created);
-      $("#exampleModal").modal("show");
-      $('.todo-button').attr('disabled', false);
-    })
-  }
-
-  function saveTodo(){
-    $('.save-todo-button').attr('disabled', true);
-    var todo = {};
-
-    todo.description = $('#description').val();
-    todo.created = $('#created').val();
-
-    $.ajax({
-      url: 'rest/todos/'+$('#id').val(),
-      type: 'PUT',
-      data: JSON.stringify(todo),
-      contentType: "application/json",
-      dataType: "json",
-      success: function(result) {
-          $("#exampleModal").modal("hide");
-          $('.save-todo-button').attr('disabled', false);
-          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-          getTodos(); // perf optimization
-          console.log(result);
-      }
-    });
-
-    console.log(todo);
-  }
-
-  function deleteTodo(id){
-    $('.todo-button').attr('disabled', true);
-    $.ajax({
-      url: 'rest/todos/'+id,
-      type: 'DELETE',
-      success: function(result) {
-          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-          getTodos();
-      }
-    });
-  }
-/*
-  function addTodo(){
-    var todo = {};
-    todo.description = $('#add_description').val();
-    todo.created = $('#add_created').val();
-
-    $.ajax({
-      url: 'rest/todos',
-      type: 'POST',
-      data: JSON.stringify(todo),
-      contentType: "application/json",
-      dataType: "json",
-      success: function(result) {
-          $("#todo-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-          getTodos(); // perf optimization
-          console.log(result);
-          $("#addToDoModal").modal("hide");
-      }
-    });
-
-  }*/
+  ToDoService.init();
 </script>
 
 </html>
