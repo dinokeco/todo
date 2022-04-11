@@ -47,6 +47,7 @@ var TodoService = {
   },
 
   delete: function(id){
+    var old_html = $("#notes-todos").html();
     $('.note-todo-'+id).remove();
     toastr.info("Deleting in background ...");
     $.ajax({
@@ -56,7 +57,9 @@ var TodoService = {
         toastr.success("Deleted !");
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
-        alert("Status: " + textStatus); alert("Error: " + errorThrown);
+        toastr.error(XMLHttpRequest.responseJSON.message);
+        $("#notes-todos").html(old_html);
+        //alert("Status: " + textStatus); alert("Error: " + errorThrown);
       }
     });
   },
