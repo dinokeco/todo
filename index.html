@@ -99,12 +99,21 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-              <label>Description</label>
+              <label>Name</label>
               <input name="name" type="text" class="form-control required" placeholder="Enter name">
             </div>
             <div class="form-group">
               <label>Description</label>
               <input name="description" type="text" class="form-control required" placeholder="Enter description">
+            </div>
+            <div class="form-group">
+              <label>Color</label>
+              <input name="color" value="white" type="hidden" class="form-control required" placeholder="Enter color">
+              <div class="form-control btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn" style="background-color:red; color:red;" onclick="NoteService.choose_color('red');">X</button>
+                <button type="button" class="btn" style="background-color:yellow; color: yellow;" onclick="NoteService.choose_color('yellow');">X</button>
+                <button type="button" class="btn" style="background-color:blue; color:blue;" onclick="NoteService.choose_color('blue');">X</button>
+              </div>
             </div>
             <div class="form-group">
               <label>Created</label>
