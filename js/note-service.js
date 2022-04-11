@@ -23,7 +23,7 @@ var NoteService = {
                 <p class="card-text">`+ data[i].description +`</p>
                 <div class="btn-group" role="group">
                   <button type="button" class="btn btn-primary note-button" onclick="NoteService.get(`+data[i].id+`)">Edit</button>
-                  <button type="button" class="btn btn-success note-button" onclick="NoteService.get_todos(`+data[i].id+`)">Manage</button>
+                  <button type="button" class="btn btn-success note-button" onclick="TodoService.list_by_note_id(`+data[i].id+`)">Manage</button>
                   <button type="button" class="btn btn-danger note-button" onclick="NoteService.delete(`+data[i].id+`)">Delete</button>
                 </div>
               </div>
@@ -35,9 +35,6 @@ var NoteService = {
       });
     },
 
-    get_todos: function(id){
-      $("#todoModal").modal('show');
-    },
     get: function(id){
       $('.note-button').attr('disabled', true);
       $.get('rest/notes/'+id, function(data){
