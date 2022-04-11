@@ -8,5 +8,8 @@ class TodoService extends BaseService{
     parent::__construct(new TodoDao());
   }
 
+  public function get_todos_by_note_id($note_id){
+    return $this->dao->get_todos_by_note_id($note_id);
+  }
 }
 ?>
