@@ -57,7 +57,7 @@ class BaseDao{
     $query = substr($query, 0, -2);
     $query .= ")";
 
-    $stmt= $this->connection->prepare($query);
+    $stmt= $this->conn->prepare($query);
     $stmt->execute($entity); // sql injection prevention
     $entity['id'] = $this->conn->lastInsertId();
     return $entity;
