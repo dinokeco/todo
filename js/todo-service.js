@@ -1,7 +1,21 @@
 var TodoService = {
 
   add: function(todo){
-
+    $.ajax({
+      url: 'rest/todos',
+      type: 'POST',
+      data: JSON.stringify(todo),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+        console.log(result);
+        // append to the list
+        $("#notes-todos").append(`<div class="list-group-item note-todo-`+result.id+`">
+          <button class="btn btn-danger btn-sm float-end" onclick="TodoService.delete(`+result.id+`)">delete</button>
+          <p class="list-group-item-text">`+result.description+`</p>
+        </div>`);
+      }
+    });
   },
 
   list_by_note_id: function(note_id){
@@ -16,6 +30,19 @@ var TodoService = {
       }
       $("#notes-todos").html(html);
     });
+
+    // note id populate and form validation
+    $('#add-todo-form input[name="note_id"]').val(note_id);
+    $('#add-todo-form input[name="created"]').val(TodoService.current_date());
+
+    $('#add-todo-form').validate({
+      submitHandler: function(form) {
+        var entity = Object.fromEntries((new FormData(form)).entries());
+        //console.log(entity);
+        TodoService.add(entity);
+        $('#add-todo-form input[name="description"]').val("");
+      }
+    });
     $("#todoModal").modal('show');
   },
 
@@ -29,5 +56,17 @@ var TodoService = {
       }
     });
   },
+
+  current_date: function(){
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1; // Months start at 0!
+    let dd = today.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    return yyyy+"-"+mm+"-"+dd;
+  }
 
 }
