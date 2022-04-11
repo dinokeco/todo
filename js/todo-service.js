@@ -8,12 +8,12 @@ var TodoService = {
       contentType: "application/json",
       dataType: "json",
       success: function(result) {
-        console.log(result);
         // append to the list
         $("#notes-todos").append(`<div class="list-group-item note-todo-`+result.id+`">
           <button class="btn btn-danger btn-sm float-end" onclick="TodoService.delete(`+result.id+`)">delete</button>
           <p class="list-group-item-text">`+result.description+`</p>
         </div>`);
+        toastr.success("Added !");
       }
     });
   },
@@ -38,9 +38,9 @@ var TodoService = {
     $('#add-todo-form').validate({
       submitHandler: function(form) {
         var entity = Object.fromEntries((new FormData(form)).entries());
-        //console.log(entity);
         TodoService.add(entity);
         $('#add-todo-form input[name="description"]').val("");
+        toastr.info("Adding ...");
       }
     });
     $("#todoModal").modal('show');
@@ -48,11 +48,15 @@ var TodoService = {
 
   delete: function(id){
     $('.note-todo-'+id).remove();
+    toastr.info("Deleting in background ...");
     $.ajax({
       url: 'rest/todos/'+id,
       type: 'DELETE',
       success: function(result) {
-        alert("deleted")
+        toastr.success("Deleted !");
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("Status: " + textStatus); alert("Error: " + errorThrown);
       }
     });
   },
