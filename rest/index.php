@@ -6,7 +6,9 @@ error_reporting(E_ALL);
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/services/NoteService.class.php';
 require_once __DIR__.'/services/TodoService.class.php';
+require_once __DIR__.'/dao/UserDao.class.php';
 
+Flight::register('userDao', 'UserDao');
 Flight::register('todoService', 'TodoService');
 Flight::register('noteService', 'NoteService');
 
@@ -17,6 +19,7 @@ Flight::map('error', function(Exception $ex){
 
 require_once __DIR__.'/routes/TodoRoutes.php';
 require_once __DIR__.'/routes/NoteRoutes.php';
+require_once __DIR__.'/routes/UserRoutes.php';
 
 Flight::start();
 ?>

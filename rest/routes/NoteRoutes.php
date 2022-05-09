@@ -1,5 +1,4 @@
 <?php
-
 // CRUD operations for todos entity
 
 /**
