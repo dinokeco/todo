@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>ToDo App</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="container marketing" style="margin-top:100px;">
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <form id="login-form">
+          <div class="mb-3">
+            <label class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" value="dino.keco@gmail.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" value="123">
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="js/user-service.js"></script>
+  <script type="text/javascript">
+    UserService.init();
+  </script>
+</body>

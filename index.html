@@ -35,7 +35,7 @@
           </ul>
           <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-outline-success" type="button" onclick="UserService.logout()">Logout</button>
           </form>
         </div>
       </div>
@@ -66,6 +66,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="js/note-service.js"></script>
 <script src="js/todo-service.js"></script>
+<script src="js/user-service.js"></script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -176,7 +177,13 @@
 </div>
 
 <script>
-  NoteService.init();
+
+  var token = localStorage.getItem("token");
+  if (token){
+    NoteService.init();
+  }else{
+    window.location.replace("login.html");
+  }
 </script>
 
 </html>
