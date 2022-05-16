@@ -1,6 +1,7 @@
 {
     "require": {
         "mikecao/flight": "^2.0",
-        "firebase/php-jwt": "^6.1"
+        "firebase/php-jwt": "^6.1",
+        "zircote/swagger-php": "3.*"
     }
 }

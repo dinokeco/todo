@@ -2,8 +2,11 @@
 // CRUD operations for todos entity
 
 /**
-* List all todos
-*/
+ * @OA\Get(path="/todos", tags={"todo"}, security={{"ApiKeyAuth": {}}},
+ *         summary="Return all user todos from the API. ",
+ *         @OA\Response( response=200, description="List of todos.")
+ * )
+ */
 Flight::route('GET /todos', function(){
   Flight::json(Flight::todoService()->get_all());
 });
