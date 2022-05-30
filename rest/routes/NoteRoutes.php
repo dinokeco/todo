@@ -8,7 +8,9 @@
  * )
  */
 Flight::route('GET /notes', function(){
-  Flight::json(Flight::noteService()->get_all());
+  // who is the user who calls this method?
+  $user = Flight::get('user');
+  Flight::json(Flight::noteService()->get_user_notes($user));
 });
 
 /**

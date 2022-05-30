@@ -10,6 +10,10 @@ class NoteDao extends BaseDao{
     parent::__construct("notes");
   }
 
+  public function get_user_notes($user_id){
+    return $this->query("SELECT * FROM notes WHERE user_id = :user_id", ['user_id' => $user_id]);
+  }
+
 }
 
 ?>
