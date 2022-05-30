@@ -2,13 +2,16 @@
 /**
  * @OA\Get(path="/notes", tags={"notes"}, security={{"ApiKeyAuth": {}}},
  *         summary="Return all user notes from the API. ",
+ *         @OA\Parameter(in="query", name="search", description="Search critieri"),
  *         @OA\Response( response=200, description="List of notes.")
  * )
  */
 Flight::route('GET /notes', function(){
   // who is the user who calls this method?
   $user = Flight::get('user');
-  Flight::json(Flight::noteService()->get_user_notes($user));
+  $search = Flight::query('search');
+
+  Flight::json(Flight::noteService()->get_user_notes($user, $search));
 });
 
 /**

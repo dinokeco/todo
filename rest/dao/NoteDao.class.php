@@ -10,15 +10,28 @@ class NoteDao extends BaseDao{
     parent::__construct("notes");
   }
 
-  public function get_user_notes($user_id){
+  public function get_user_notes($user_id, $search = NULL){
   //  return $this->query("SELECT * FROM notes WHERE user_id = :user_id", ['user_id' => $user_id]);
+    $query = "(SELECT n.*
+    FROM notes n JOIN shared_notes sn ON n.id = sn.note_id AND sn.user_id = :user_id
+    ";
+    if (isset($search)){
+      $query .= " AND n.name LIKE '%".$search."%'";
+    }
 
-    return $this->query("(SELECT n.*
-    FROM notes n JOIN shared_notes sn ON n.id = sn.note_id AND sn.user_id = :user_id)
+    $query .= ")
     UNION
     (SELECT b.*
     FROM notes b
-    WHERE b.user_id = :user_id)", ['user_id' => $user_id]);
+    WHERE b.user_id = :user_id";
+
+    if (isset($search)){
+      $query .= " AND b.name LIKE '%".$search."%' ";
+    }
+
+    $query .=")";
+
+    return $this->query($query, ['user_id' => $user_id]);
   }
 
   public function get_by_id($id){
