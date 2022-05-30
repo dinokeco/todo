@@ -20,7 +20,7 @@ Flight::route('GET /notes', function(){
  * )
  */
 Flight::route('GET /notes/@id', function($id){
-  Flight::json(Flight::noteService()->get_by_id($id));
+  Flight::json(Flight::noteService()->get_note_by_id(Flight::get('user'), $id));
 });
 
 /**

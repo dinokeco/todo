@@ -48,13 +48,24 @@ var NoteService = {
 
     get: function(id){
       $('.note-button').attr('disabled', true);
-      $.get('rest/notes/'+id, function(data){
-        $("#description").val(data.description);
-        $("#id").val(data.id);
-        $("#created").val(data.created);
-        $("#exampleModal").modal("show");
-        $('.todo-button').attr('disabled', false);
-      })
+
+      $.ajax({
+         url: 'rest/notes/'+id,
+         type: "GET",
+         beforeSend: function(xhr){
+           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+         },
+         success: function(data) {
+           $("#description").val(data.description);
+           $("#id").val(data.id);
+           $("#created").val(data.created);
+           $("#exampleModal").modal("show");
+           $('.note-button').attr('disabled', false);
+         },
+         error: function(XMLHttpRequest, textStatus, errorThrown) {
+           toastr.error(XMLHttpRequest.responseJSON.message);
+           $('.note-button').attr('disabled', false);
+         }});
     },
 
     add: function(note){
