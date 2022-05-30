@@ -39,6 +39,7 @@ var NoteService = {
                      <button type="button" class="btn btn-primary note-button" onclick="NoteService.get(`+data[i].id+`)">Edit</button>
                      <button type="button" class="btn btn-success note-button" onclick="TodoService.list_by_note_id(`+data[i].id+`)">Manage</button>
                      <button type="button" class="btn btn-danger note-button" onclick="NoteService.delete(`+data[i].id+`)">Delete</button>
+                     <button type="button" class="btn btn-warning note-button" onclick="NoteService.share(`+data[i].id+`)">Share</button>
                    </div>
                  </div>
                </div>
@@ -135,5 +136,33 @@ var NoteService = {
 
     choose_color: function(color){
       $('#addNoteForm input[name="color"]').val(color);
+    },
+
+    share: function(id){
+      $('#shareNoteForm input[name="note_id"]').val(id);
+      $('#shareModal').modal('show');
+    },
+
+    share_note : function(){
+      var note_id = $('#shareNoteForm input[name="note_id"]').val();
+      var recipient = $('#shareNoteForm input[name="recipient"]').val();
+
+      $.ajax({
+        url: 'rest/notes/'+note_id+'/share',
+        type: 'POST',
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        },
+        data: JSON.stringify({email: recipient}),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(result) {
+            $("#shareModal").modal("hide");
+            toastr.success("Note shared!");
+        }
+      });
+
     }
+
+
 }

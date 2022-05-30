@@ -11,7 +11,14 @@ class NoteDao extends BaseDao{
   }
 
   public function get_user_notes($user_id){
-    return $this->query("SELECT * FROM notes WHERE user_id = :user_id", ['user_id' => $user_id]);
+  //  return $this->query("SELECT * FROM notes WHERE user_id = :user_id", ['user_id' => $user_id]);
+
+    return $this->query("(SELECT n.*
+    FROM notes n JOIN shared_notes sn ON n.id = sn.note_id AND sn.user_id = :user_id)
+    UNION
+    (SELECT b.*
+    FROM notes b
+    WHERE b.user_id = :user_id)", ['user_id' => $user_id]);
   }
 
   public function get_by_id($id){
