@@ -34,6 +34,7 @@ class NoteService extends BaseService{
       throw new Exception("This is hack you will be traced, be prepared :)");
     }
     unset($entity['user_id']);
+    unset($entity['status']);
     return parent::update($user, $id, $entity);
   }
 
