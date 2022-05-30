@@ -17,7 +17,6 @@ class NoteDao extends BaseDao{
   public function get_by_id($id){
     return $this->query_unique('SELECT n.*, DATE_FORMAT(n.created, "%Y-%m-%d") created FROM notes n WHERE n.id = :id', ['id' => $id]);
   }
-
 }
 
 ?>

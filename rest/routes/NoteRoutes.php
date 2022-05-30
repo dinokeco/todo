@@ -108,4 +108,31 @@ Flight::route('DELETE /notes/@id', function($id){
   Flight::json(["message" => "deleted"]);
 });
 
+/**
+* @OA\Post(
+*     path="/notes/{id}/share", security={{"ApiKeyAuth": {}}},
+*     description="Share user note",
+*     @OA\Parameter(in="path", name="id", example=1, description="Note ID"),
+*     tags={"notes"},
+*     @OA\RequestBody(description="Recipient info", required=true,
+*       @OA\MediaType(mediaType="application/json",
+*    			@OA\Schema(
+*    				@OA\Property(property="email", type="string", example="dino.keco@ibu.edu.ba",	description="Recipient of the note")
+*        )
+*     )),
+*     @OA\Response(
+*         response=200,
+*         description="Note that has been shared"
+*     ),
+*     @OA\Response(
+*         response=500,
+*         description="Error"
+*     )
+* )
+*/
+Flight::route('POST /notes/@id/share', function($id){
+  $data = Flight::request()->data->getData();
+  Flight::json(Flight::noteService()->share(Flight::get('user'), $id, $data['email']));
+});
+
 ?>
