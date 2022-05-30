@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>BAL BALA A AA</title>
+    <title>ToDo API Swagger UI</title>
     <link rel="stylesheet" type="text/css" href="swagger-ui.css">
     <link rel="stylesheet" type="text/css" href="custom-swagger.css">
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />

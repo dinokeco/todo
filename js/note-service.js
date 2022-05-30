@@ -3,7 +3,15 @@ var NoteService = {
       $('#addNoteForm').validate({
         submitHandler: function(form) {
           var entity = Object.fromEntries((new FormData(form)).entries());
-          NoteService.add(entity);
+          if (!isNaN(entity.id)){
+            // update method
+            var id = entity.id;
+            delete entity.id;
+            NoteService.update(id, entity);
+          }else{
+            // add method
+            NoteService.add(entity);
+          }
         }
       });
       NoteService.list();
@@ -56,11 +64,14 @@ var NoteService = {
            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
          },
          success: function(data) {
-           $("#description").val(data.description);
-           $("#id").val(data.id);
-           $("#created").val(data.created);
-           $("#exampleModal").modal("show");
+           $('#addNoteForm input[name="id"]').val(data.id);
+           $('#addNoteForm input[name="name"]').val(data.name);
+           $('#addNoteForm input[name="description"]').val(data.description);
+           $('#addNoteForm input[name="created"]').val(data.created);
+           $('#addNoteForm input[name="color"]').val(data.color);
+
            $('.note-button').attr('disabled', false);
+           $('#addNoteModal').modal("show");
          },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
@@ -72,6 +83,9 @@ var NoteService = {
       $.ajax({
         url: 'rest/notes',
         type: 'POST',
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        },
         data: JSON.stringify(note),
         contentType: "application/json",
         dataType: "json",
@@ -79,28 +93,26 @@ var NoteService = {
             $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
             NoteService.list(); // perf optimization
             $("#addNoteModal").modal("hide");
+            toastr.success("Note added!");
         }
       });
     },
 
-    update: function(){
-      $('.save-note-button').attr('disabled', true);
-      var todo = {};
-
-      todo.description = $('#description').val();
-      todo.created = $('#created').val();
-
+    update: function(id, entity){
       $.ajax({
-        url: 'rest/notes/'+$('#id').val(),
+        url: 'rest/notes/'+id,
         type: 'PUT',
-        data: JSON.stringify(todo),
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        },
+        data: JSON.stringify(entity),
         contentType: "application/json",
         dataType: "json",
         success: function(result) {
-            $("#exampleModal").modal("hide");
-            $('.save-note-button').attr('disabled', false);
             $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            ToDoService.list(); // perf optimization
+            NoteService.list(); // perf optimization
+            $("#addNoteModal").modal("hide");
+            toastr.success("Note updated!");
         }
       });
     },
@@ -109,10 +121,14 @@ var NoteService = {
       $('.note-button').attr('disabled', true);
       $.ajax({
         url: 'rest/notes/'+id,
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        },
         type: 'DELETE',
         success: function(result) {
             $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
             NoteService.list();
+            toastr.success("Note deleted!");
         }
       });
     },
